@@ -261,29 +261,85 @@ python serve.py
 
 ---
 
+## Experimental Results & Analysis
+
+### Experiment 1: Initial Training (20 Epochs, Batch Size 128)
+
+**Settings:**
+- EPOCHS = 20
+- BATCH_SIZE = 128
+- LEARNING_RATE = 0.001
+
+**Key Observations:**
+
+| Epoch | Train Loss | Val Loss | Train Acc | Val Acc | Train Perplexity | Val Perplexity |
+|-------|-----------|----------|-----------|---------|------------------|----------------|
+| 1     | 6.64      | 6.34     | 8.69%     | 8.25%   | 765.57          | 566.61         |
+| 5     | 5.46      | 6.55     | 12.87%    | 9.44%   | 234.05          | 700.98         |
+| 8     | 5.02      | 7.00     | 15.48%    | 9.04%   | 150.83          | 1095.23        |
+
+**What Went Wrong:**
+- ⚠️ **Overfitting detected after epoch 5-6**
+  - Training loss kept decreasing: 6.64 → 5.02
+  - Validation loss started INCREASING: 6.34 → 7.00
+  - Gap between train/val metrics grew wider
+  
+- ⚠️ **Validation perplexity exploded**
+  - Started at 567, rose to 1095 by epoch 8
+  - Model became increasingly confused on unseen data
+
+- ⚠️ **Validation accuracy plateaued**
+  - Barely improved from 8.25% to 9.04%
+  - Training accuracy doubled (8.69% → 15.48%)
+
+**Root Causes:**
+1. **Too many epochs** - Model started memorizing training data
+2. **Large batch size (128)** - Less frequent weight updates, worse generalization
+3. **Shakespeare's archaic language** - Specialized vocabulary hard to generalize
+4. **Model capacity** - 6.2M parameters might be too much for this dataset
+
+**Lesson Learned:**
+> "More training ≠ better model. Validation metrics must guide when to stop."
+
+---
+
+### Experiment 2: Optimized Training (In Progress)
+
+**Adjusted Settings:**
+- EPOCHS = 10 (reduced from 20)
+- BATCH_SIZE = 64 (reduced from 128)
+- LEARNING_RATE = 0.001 (unchanged)
+
+**Expected Improvements:**
+- Better generalization with smaller batches
+- Stop before severe overfitting occurs
+- Validation metrics should stabilize better
+
+*Results will be updated after training completes...*
+
+---
+
 ## Model Performance Analysis
 
 ### Strengths
 
 - Model successfully learned word patterns from Shakespeare
-- Training loss decreased consistently (6.64 → 4.71)
+- Training loss decreased consistently 
 - Accuracy improved throughout training
 - Model converged well (no catastrophic loss spikes)
 - Fast training on M2 with MPS acceleration
 
 ### Limitations
 
-- **Overfitting**: Large gap between train (19%) and validation (8.86%) accuracy
-
+- **Overfitting**: Large gap between train and validation accuracy
   - Model memorized training patterns too well
   - Shakespeare text is archaic/specialized
 
-- **Low validation accuracy**: 8.86% is modest
-
+- **Low validation accuracy**: ~9% is modest
   - Large vocabulary (13.7K words) makes prediction harder
   - Model needs longer context for better predictions
 
-- **High validation perplexity**: 1127.92 indicates uncertainty on new data
+- **High validation perplexity**: Indicates uncertainty on new data
 
 ### Why These Results?
 
