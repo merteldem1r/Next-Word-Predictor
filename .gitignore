@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Model files and data
+saved_models/*.pth
+saved_models/*.pkl
+data/*.txt
+data/*.csv
+
+# Results and visualizations
+results/*.png
+results/*.jpg
+results/*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+
+# PyTorch
+*.pt
+
+# Gradio
+flagged/
+
+# Environment variables
+.env
+.env.local
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
